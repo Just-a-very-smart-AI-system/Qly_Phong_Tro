@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-03-17T14:13:57+0700",
+    date = "2025-03-24T09:50:11+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -22,7 +22,7 @@ public class ManagerMapperImpl implements ManagerMapper {
 
         Manager manager = new Manager();
 
-        manager.setUsername( dto.getUsername() );
+        manager.setUserName( dto.getUserName() );
         manager.setPassword( dto.getPassword() );
         manager.setEmail( dto.getEmail() );
         manager.setPhone( dto.getPhone() );
@@ -43,7 +43,7 @@ public class ManagerMapperImpl implements ManagerMapper {
         ManagerResponseDTO managerResponseDTO = new ManagerResponseDTO();
 
         managerResponseDTO.setManagerId( manager.getManagerId() );
-        managerResponseDTO.setUsername( manager.getUsername() );
+        managerResponseDTO.setUserName( manager.getUserName() );
         managerResponseDTO.setEmail( manager.getEmail() );
         managerResponseDTO.setPhone( manager.getPhone() );
         managerResponseDTO.setAddress( manager.getAddress() );

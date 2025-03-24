@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class CreateManagerRequestDTO {
     @NotBlank(message = "Username is required")
     @Size(max = 50, message = "Username must not exceed 50 characters")
-    private String username;
+    private String userName;
 
     @NotBlank(message = "Password is required")
     @Size(min = 6, max = 255, message = "Password must be between 6 and 255 characters")

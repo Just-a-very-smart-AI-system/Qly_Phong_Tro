@@ -8,6 +8,7 @@ import com.example.QuanLyPhongTro.Mapper.ProvinceMapper;
 import com.example.QuanLyPhongTro.Repository.ProvinceRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.DataException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,12 @@ public class ProvinceService {
 
     @Transactional
     public ProvinceResponseDTO createProvince(CreateProvinceRequestDTO requestDTO) {
+        if(provinceRepository.existsByProvinceId(requestDTO.getProvinceId())){
+            throw new DataException("Province Id already exists", null);
+        }
+        else if(provinceRepository.existsByProvinceName(requestDTO.getProvinceName())){
+            throw new DataException("Province Id already exists", null);
+        }
         Province province = provinceMapper.toEntity(requestDTO);
         province = provinceRepository.save(province);
         return provinceMapper.toDto(province);

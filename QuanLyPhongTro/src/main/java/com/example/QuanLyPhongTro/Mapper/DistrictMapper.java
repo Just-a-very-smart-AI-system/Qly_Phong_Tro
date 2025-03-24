@@ -10,8 +10,10 @@ import org.mapstruct.Mapping;
 public interface DistrictMapper {
 
     @Mapping(target = "province", ignore = true)
+    @Mapping(source = "districtId", target = "districtId")
     District toEntity(CreateDistrictRequestDTO dto);
 
     @Mapping(source = "province.provinceId", target = "provinceId")
+    @Mapping(source = "districtId", target = "districtId")
     DistrictResponseDTO toDto(District district);
 }

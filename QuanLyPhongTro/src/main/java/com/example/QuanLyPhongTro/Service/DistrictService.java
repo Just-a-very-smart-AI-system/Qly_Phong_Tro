@@ -10,6 +10,7 @@ import com.example.QuanLyPhongTro.Repository.DistrictRepository;
 import com.example.QuanLyPhongTro.Repository.ProvinceRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.DataException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +27,12 @@ public class DistrictService {
     @Transactional
     public DistrictResponseDTO createDistrict(CreateDistrictRequestDTO requestDTO) {
         District district = districtMapper.toEntity(requestDTO);
-
+        if (districtRepository.existsByDistrictId(requestDTO.getDistrictId())){
+            throw new DataException("District Id already exists", null);
+        }
+        else if (districtRepository.existsByDistrictName(requestDTO.getDistrictName())){
+            throw new DataException("District Name already exists", null);
+        }
         // Gán Province
         if (requestDTO.getProvinceId() != null) {
             Province province = provinceRepository.findById(requestDTO.getProvinceId())

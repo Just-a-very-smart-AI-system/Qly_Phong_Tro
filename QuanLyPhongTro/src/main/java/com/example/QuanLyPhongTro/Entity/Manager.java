@@ -16,22 +16,22 @@ public class Manager {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer managerId;
 
-    @Column(length = 50)
-    private String username;
+    @Column(name = "username", length = 50)
+    private String userName;
 
-    @Column(length = 255)
+    @Column(name = "password",length = 255)
     private String password;
 
-    @Column(length = 100)
+    @Column(name = "email",length = 100)
     private String email;
 
-    @Column(length = 15)
+    @Column(name = "phone",length = 15)
     private String phone;
 
-    @Column(length = 255)
+    @Column(name = "address",length = 255)
     private String address;
 
-    @Column(length = 20)
+    @Column(name = "cmnd",length = 20)
     private String cmnd;
 
     @Column(name = "extra_contact", length = 100)

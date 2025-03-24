@@ -9,6 +9,7 @@ import com.example.QuanLyPhongTro.Repository.DistrictRepository;
 import com.example.QuanLyPhongTro.Repository.WardRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.DataException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,9 @@ public class WardService {
     @Transactional
     public WardResponseDTO createWard(CreateWardRequestDTO requestDTO) {
         Ward ward = wardMapper.toEntity(requestDTO);
-
+        if(wardRepository.existsByWardId(requestDTO.getWardId())){
+            throw new DataException("Ward Id already exists", null);
+        }
         // Gán District
         if (requestDTO.getDistrictId() != null) {
             District district = districtRepository.findById(requestDTO.getDistrictId())

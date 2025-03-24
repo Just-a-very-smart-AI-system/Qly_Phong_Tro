@@ -11,6 +11,7 @@ import com.example.QuanLyPhongTro.Repository.AddressRepository;
 import com.example.QuanLyPhongTro.Repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.DataException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,7 +30,12 @@ public class UserService {
     public UserResponseDTO createUser(CreateUserRequestDTO requestDTO) {
         User user = userMapper.toEntity(requestDTO);
         user.setCreatedAt(LocalDateTime.now());
-
+        if (userRepository.existsByUserName(requestDTO.getUserName())) {
+            throw new DataException("Username already exists", null);
+        }
+        if (userRepository.existsByEmail(requestDTO.getEmail())) {
+            throw new DataException("Email already exists", null);
+        }
         // Gán Address nếu addressId được cung cấp
         if (requestDTO.getAddressId() != null) {
             Address address = addressRepository.findById(requestDTO.getAddressId())

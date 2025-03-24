@@ -12,7 +12,7 @@ import jakarta.persistence.*;
 public class Province {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "province_id")
     private Integer provinceId;
 
     @Column(name = "province_name", length = 100)

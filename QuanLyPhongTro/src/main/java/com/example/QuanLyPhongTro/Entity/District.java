@@ -12,7 +12,7 @@ import jakarta.persistence.*;
 public class District {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "district_id")
     private Integer districtId;
 
     @ManyToOne

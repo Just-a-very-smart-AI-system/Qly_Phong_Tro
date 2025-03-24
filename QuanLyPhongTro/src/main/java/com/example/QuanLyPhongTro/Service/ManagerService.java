@@ -7,6 +7,8 @@ import com.example.QuanLyPhongTro.Mapper.ManagerMapper;
 import com.example.QuanLyPhongTro.Repository.ManagerRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.DataException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,12 +18,18 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ManagerService {
-
+    @Autowired
     private final ManagerRepository managerRepository;
     private final ManagerMapper managerMapper;
 
     @Transactional
     public ManagerResponseDTO createManager(CreateManagerRequestDTO requestDTO) {
+        if (managerRepository.existsByUserName(requestDTO.getUserName())) {
+            throw new DataException("Username already exists", null);
+        }
+        if (managerRepository.existsByEmail(requestDTO.getEmail())) {
+            throw new DataException("Email already exists", null);
+        }
         Manager manager = managerMapper.toEntity(requestDTO);
         manager.setCreatedAt(requestDTO.getCreatedAt() != null ? requestDTO.getCreatedAt() : LocalDateTime.now());
         manager = managerRepository.save(manager);

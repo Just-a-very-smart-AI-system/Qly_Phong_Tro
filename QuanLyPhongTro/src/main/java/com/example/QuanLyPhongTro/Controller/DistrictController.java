@@ -19,25 +19,25 @@ public class DistrictController {
 
     private final DistrictService districtService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<DistrictResponseDTO> createDistrict(@Valid @RequestBody CreateDistrictRequestDTO requestDTO) {
         DistrictResponseDTO response = districtService.createDistrict(requestDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{districtId}")
+    @GetMapping("/getById/{districtId}")
     public ResponseEntity<DistrictResponseDTO> getDistrictById(@PathVariable Integer districtId) {
         DistrictResponseDTO response = districtService.getDistrictById(districtId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<DistrictResponseDTO>> getAllDistricts() {
         List<DistrictResponseDTO> response = districtService.getAllDistricts();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{districtId}")
+    @DeleteMapping("/delete/{districtId}")
     public ResponseEntity<Void> deleteDistrict(@PathVariable Integer districtId) {
         districtService.deleteDistrict(districtId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

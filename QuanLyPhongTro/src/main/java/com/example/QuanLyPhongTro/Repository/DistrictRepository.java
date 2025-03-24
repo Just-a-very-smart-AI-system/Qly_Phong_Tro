@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DistrictRepository extends JpaRepository<District, Integer> {
+    Boolean existsByDistrictId(Integer id);
+    Boolean existsByDistrictName(String name);
 }

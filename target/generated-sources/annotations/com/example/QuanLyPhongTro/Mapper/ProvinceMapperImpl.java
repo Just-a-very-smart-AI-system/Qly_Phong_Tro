@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-03-17T14:13:57+0700",
+    date = "2025-03-24T10:00:35+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -22,6 +22,7 @@ public class ProvinceMapperImpl implements ProvinceMapper {
 
         Province province = new Province();
 
+        province.setProvinceId( dto.getProvinceId() );
         province.setProvinceName( dto.getProvinceName() );
 
         return province;

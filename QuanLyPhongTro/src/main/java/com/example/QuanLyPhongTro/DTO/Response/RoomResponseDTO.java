@@ -16,4 +16,5 @@ public class RoomResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Integer addressId;
+//    private RoomUtilityResponseDTO roomUtilityResponseDTO;
 }
