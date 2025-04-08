@@ -51,7 +51,11 @@ public class WardService {
                 .map(wardMapper::toDto)
                 .toList();
     }
-
+    public List<WardResponseDTO> getByDistrict(Integer id) {
+        return wardRepository.findAllByDistrictDistrictId(id).stream()
+                .map(wardMapper::toDto)
+                .toList();
+    }
     @Transactional
     public void deleteWard(Integer wardId) {
         if (!wardRepository.existsById(wardId)) {

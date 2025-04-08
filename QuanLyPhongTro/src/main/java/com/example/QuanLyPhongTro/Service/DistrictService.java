@@ -56,6 +56,11 @@ public class DistrictService {
                 .toList();
     }
 
+    public List<DistrictResponseDTO> getAllByProvince(Integer provinceId){
+        return districtRepository.findAllByProvinceProvinceId(provinceId).stream()
+                .map(districtMapper::toDto).toList();
+    }
+
     @Transactional
     public void deleteDistrict(Integer districtId) {
         if (!districtRepository.existsById(districtId)) {

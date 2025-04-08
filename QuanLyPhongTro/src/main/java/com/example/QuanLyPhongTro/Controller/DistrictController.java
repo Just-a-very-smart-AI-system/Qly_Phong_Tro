@@ -36,6 +36,11 @@ public class DistrictController {
         List<DistrictResponseDTO> response = districtService.getAllDistricts();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/getByProvince/{id}")
+    public ResponseEntity<List<DistrictResponseDTO>> getByProvince(@PathVariable Integer id) {
+        List<DistrictResponseDTO> response = districtService.getAllByProvince(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     @DeleteMapping("/delete/{districtId}")
     public ResponseEntity<Void> deleteDistrict(@PathVariable Integer districtId) {

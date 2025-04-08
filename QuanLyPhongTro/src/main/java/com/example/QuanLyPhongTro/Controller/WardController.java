@@ -36,7 +36,11 @@ public class WardController {
         List<WardResponseDTO> response = wardService.getAllWards();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
+    @GetMapping("/getByDistrict/{districtId}")
+    public ResponseEntity<List<WardResponseDTO>> getByDistrict(@PathVariable Integer districtId) {
+        List<WardResponseDTO> response = wardService.getByDistrict(districtId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @DeleteMapping("/delete/{wardId}")
     public ResponseEntity<Void> deleteWard(@PathVariable Integer wardId) {
         wardService.deleteWard(wardId);

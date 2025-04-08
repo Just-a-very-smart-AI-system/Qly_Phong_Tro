@@ -3,7 +3,6 @@ package com.example.QuanLyPhongTro.Mapper;
 import com.example.QuanLyPhongTro.DTO.Request.CreateRoomRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Request.UpdateRoomRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Response.RoomResponseDTO;
-import com.example.QuanLyPhongTro.Entity.Address;
 import com.example.QuanLyPhongTro.Entity.Manager;
 import com.example.QuanLyPhongTro.Entity.Room;
 import javax.annotation.processing.Generated;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-03-24T09:50:11+0700",
+    date = "2025-04-08T14:39:23+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -25,13 +24,11 @@ public class RoomMapperImpl implements RoomMapper {
 
         Room room = new Room();
 
-        room.setTitle( dto.getTitle() );
-        room.setDescription( dto.getDescription() );
         room.setPrice( dto.getPrice() );
         room.setArea( dto.getArea() );
         room.setMaxOccupants( dto.getMaxOccupants() );
-        room.setCreatedAt( dto.getCreatedAt() );
-        room.setUpdatedAt( dto.getUpdatedAt() );
+        room.setDescription( dto.getDescription() );
+        room.setTitle( dto.getTitle() );
 
         return room;
     }
@@ -42,12 +39,21 @@ public class RoomMapperImpl implements RoomMapper {
             return room;
         }
 
-        room.setTitle( dto.getTitle() );
-        room.setDescription( dto.getDescription() );
-        room.setPrice( dto.getPrice() );
-        room.setArea( dto.getArea() );
-        room.setMaxOccupants( dto.getMaxOccupants() );
-        room.setUpdatedAt( dto.getUpdatedAt() );
+        if ( dto.getPrice() != null ) {
+            room.setPrice( dto.getPrice() );
+        }
+        if ( dto.getArea() != null ) {
+            room.setArea( dto.getArea() );
+        }
+        if ( dto.getMaxOccupants() != null ) {
+            room.setMaxOccupants( dto.getMaxOccupants() );
+        }
+        if ( dto.getDescription() != null ) {
+            room.setDescription( dto.getDescription() );
+        }
+        if ( dto.getIsActive() != null ) {
+            room.setIsActive( dto.getIsActive() );
+        }
 
         return room;
     }
@@ -61,7 +67,7 @@ public class RoomMapperImpl implements RoomMapper {
         RoomResponseDTO roomResponseDTO = new RoomResponseDTO();
 
         roomResponseDTO.setManagerId( roomManagerManagerId( room ) );
-        roomResponseDTO.setAddressId( roomAddressAddressId( room ) );
+        roomResponseDTO.setIsActive( room.getIsActive() );
         roomResponseDTO.setRoomId( room.getRoomId() );
         roomResponseDTO.setTitle( room.getTitle() );
         roomResponseDTO.setDescription( room.getDescription() );
@@ -87,20 +93,5 @@ public class RoomMapperImpl implements RoomMapper {
             return null;
         }
         return managerId;
-    }
-
-    private Integer roomAddressAddressId(Room room) {
-        if ( room == null ) {
-            return null;
-        }
-        Address address = room.getAddress();
-        if ( address == null ) {
-            return null;
-        }
-        Integer addressId = address.getAddressId();
-        if ( addressId == null ) {
-            return null;
-        }
-        return addressId;
     }
 }

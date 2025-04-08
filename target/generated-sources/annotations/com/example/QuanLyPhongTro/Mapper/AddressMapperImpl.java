@@ -9,42 +9,32 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-03-24T09:50:11+0700",
+    date = "2025-04-08T14:01:58+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
 public class AddressMapperImpl implements AddressMapper {
 
     @Override
-    public Address toEntity(CreateAddressRequestDTO dto) {
-        if ( dto == null ) {
+    public Address toEntity(CreateAddressRequestDTO requestDTO) {
+        if ( requestDTO == null ) {
             return null;
         }
 
         Address address = new Address();
 
-        address.setStreetAddress( dto.getStreetAddress() );
-        address.setLatitude( dto.getLatitude() );
-        address.setLongitude( dto.getLongitude() );
-        address.setCreatedAt( dto.getCreatedAt() );
-        address.setUpdatedAt( dto.getUpdatedAt() );
+        address.setStreetAddress( requestDTO.getStreetAddress() );
 
         return address;
     }
 
     @Override
-    public Address toEntity(CreateAddressRequestDTO dto, Address address) {
-        if ( dto == null ) {
-            return address;
+    public void toEntity(CreateAddressRequestDTO requestDTO, Address address) {
+        if ( requestDTO == null ) {
+            return;
         }
 
-        address.setStreetAddress( dto.getStreetAddress() );
-        address.setLatitude( dto.getLatitude() );
-        address.setLongitude( dto.getLongitude() );
-        address.setCreatedAt( dto.getCreatedAt() );
-        address.setUpdatedAt( dto.getUpdatedAt() );
-
-        return address;
+        address.setStreetAddress( requestDTO.getStreetAddress() );
     }
 
     @Override

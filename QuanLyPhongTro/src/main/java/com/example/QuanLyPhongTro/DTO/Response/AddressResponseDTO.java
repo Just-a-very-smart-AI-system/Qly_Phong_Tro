@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class AddressResponseDTO {
     private Integer addressId;
     private String streetAddress;
+    private String wardAddress;
     private Integer wardId;
     private BigDecimal latitude;
     private BigDecimal longitude;

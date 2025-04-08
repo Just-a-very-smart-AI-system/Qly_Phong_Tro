@@ -11,10 +11,13 @@ import org.mapstruct.MappingTarget;
 public interface AddressMapper {
 
     @Mapping(target = "ward", ignore = true)
-    Address toEntity(CreateAddressRequestDTO dto);
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    Address toEntity(CreateAddressRequestDTO requestDTO);
 
     @Mapping(target = "ward", ignore = true)
-    Address toEntity(CreateAddressRequestDTO dto, @MappingTarget Address address);
+    @Mapping(target = "updatedAt", ignore = true)
+    void toEntity(CreateAddressRequestDTO requestDTO, @MappingTarget Address address);
 
     @Mapping(source = "ward.wardId", target = "wardId")
     AddressResponseDTO toDto(Address address);

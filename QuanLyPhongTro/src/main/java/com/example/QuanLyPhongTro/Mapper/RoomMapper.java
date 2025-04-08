@@ -8,19 +8,17 @@ import com.example.QuanLyPhongTro.Entity.Room;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface RoomMapper {
 
-    @Mapping(target = "manager", ignore = true)
     @Mapping(target = "address", ignore = true)
     Room toEntity(CreateRoomRequestDTO dto);
 
-    @Mapping(target = "manager", ignore = true)
-    @Mapping(target = "address", ignore = true)
     Room toEntity(UpdateRoomRequestDTO dto, @MappingTarget Room room);
 
     @Mapping(source = "manager.managerId", target = "managerId")
-    @Mapping(source = "address.addressId", target = "addressId")
+    @Mapping(source = "isActive", target = "isActive")
     RoomResponseDTO toDto(Room room);
 }

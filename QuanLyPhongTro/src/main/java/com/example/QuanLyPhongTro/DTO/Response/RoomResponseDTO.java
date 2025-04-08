@@ -14,6 +14,7 @@ public class RoomResponseDTO {
     private BigDecimal area;
     private Integer maxOccupants;
     private LocalDateTime createdAt;
+    private Integer isActive;
     private LocalDateTime updatedAt;
     private Integer addressId;
 //    private RoomUtilityResponseDTO roomUtilityResponseDTO;

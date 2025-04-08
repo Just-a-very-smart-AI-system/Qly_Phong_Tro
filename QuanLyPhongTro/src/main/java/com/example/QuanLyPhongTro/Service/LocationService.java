@@ -4,6 +4,7 @@ package com.example.QuanLyPhongTro.Service;
 import com.example.QuanLyPhongTro.DTO.Request.CreateDistrictRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Request.CreateProvinceRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Request.CreateWardRequestDTO;
+import com.example.QuanLyPhongTro.DTO.Response.CoordinatesDTO;
 import com.example.QuanLyPhongTro.DTO.Response.ProvinceApiResponse;
 import com.example.QuanLyPhongTro.Entity.District;
 import com.example.QuanLyPhongTro.Entity.Province;
@@ -11,12 +12,18 @@ import com.example.QuanLyPhongTro.Entity.Ward;
 import com.example.QuanLyPhongTro.Repository.DistrictRepository;
 import com.example.QuanLyPhongTro.Repository.ProvinceRepository;
 import com.example.QuanLyPhongTro.Repository.WardRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import jakarta.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -164,5 +171,54 @@ public class LocationService {
             province.setDistricts(districts);
         }
         return province;
+    }
+
+    // Hàm lấy tọa độ từ địa chỉ
+    public CoordinatesDTO getCoordinatesFromAddress(String address) {
+        // Kiểm tra đầu vào
+        if (address == null || address.trim().isEmpty()) {
+            throw new IllegalArgumentException("Address cannot be null or empty");
+        }
+
+        String url = "https://nominatim.openstreetmap.org/search?q=" + address + "&format=json&addressdetails=1&countrycodes=VN";
+
+        // Thêm header User-Agent
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("User-Agent", "QuanLyPhongTro/1.0 (contact: your-email@example.com)");
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        // Khởi tạo RestTemplate (giả định được inject hoặc khởi tạo trước)
+        RestTemplate restTemplate = new RestTemplate();
+
+        try {
+            // Gọi API Nominatim
+            ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+
+            // Kiểm tra phản hồi
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null && !response.getBody().isEmpty()) {
+                // Lấy tọa độ từ kết quả đầu tiên
+                Map<String, Object> result = (Map<String, Object>) response.getBody().get(0);
+                String lat = result.get("lat").toString();
+                String lon = result.get("lon").toString();
+
+                // Chuyển đổi sang BigDecimal và kiểm tra giá trị hợp lệ
+                CoordinatesDTO coordinates = new CoordinatesDTO();
+                coordinates.setLatitude(lat != null ? new BigDecimal(lat) : null);
+                coordinates.setLongitude(lon != null ? new BigDecimal(lon) : null);
+                return coordinates;
+            } else {
+                // Không tìm thấy tọa độ, trả về DTO với giá trị null
+                CoordinatesDTO coordinates = new CoordinatesDTO();
+                coordinates.setLatitude(null);
+                coordinates.setLongitude(null);
+                return coordinates;
+            }
+        } catch (Exception e) {
+            // Xử lý ngoại lệ (ví dụ: lỗi mạng, định dạng JSON không hợp lệ)
+            CoordinatesDTO coordinates = new CoordinatesDTO();
+            coordinates.setLatitude(null);
+            coordinates.setLongitude(null);
+            return coordinates;
+        }
     }
 }
