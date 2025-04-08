@@ -18,25 +18,25 @@ public class RoomViewController {
 
     private final RoomViewService roomViewService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<RoomViewResponseDTO> createRoomView(@Valid @RequestBody CreateRoomViewRequestDTO requestDTO) {
         RoomViewResponseDTO response = roomViewService.createRoomView(requestDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{viewId}")
+    @GetMapping("/getById/{viewId}")
     public ResponseEntity<RoomViewResponseDTO> getRoomViewById(@PathVariable Integer viewId) {
         RoomViewResponseDTO response = roomViewService.getRoomViewById(viewId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<RoomViewResponseDTO>> getAllRoomViews() {
         List<RoomViewResponseDTO> response = roomViewService.getAllRoomViews();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{viewId}")
+    @DeleteMapping("/delete/{viewId}")
     public ResponseEntity<Void> deleteRoomView(@PathVariable Integer viewId) {
         roomViewService.deleteRoomView(viewId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

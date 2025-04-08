@@ -28,8 +28,7 @@ public class RoomViewService {
 
     @Transactional
     public RoomViewResponseDTO createRoomView(CreateRoomViewRequestDTO requestDTO) {
-        RoomView roomView = roomViewMapper.toEntity(requestDTO);
-        roomView.setViewedAt(requestDTO.getViewedAt() != null ? requestDTO.getViewedAt() : LocalDateTime.now());
+        RoomView roomView = new RoomView();
 
         // Gán User
         if (requestDTO.getUserId() != null) {
@@ -44,7 +43,7 @@ public class RoomViewService {
                     .orElseThrow(() -> new RuntimeException("Room not found with id: " + requestDTO.getRoomId()));
             roomView.setRoom(room);
         }
-
+        roomView.setViewedAt(LocalDateTime.now());
         roomView = roomViewRepository.save(roomView);
         return roomViewMapper.toDto(roomView);
     }

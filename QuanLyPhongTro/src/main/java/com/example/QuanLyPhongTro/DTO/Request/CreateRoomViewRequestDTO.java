@@ -7,5 +7,4 @@ import java.time.LocalDateTime;
 public class CreateRoomViewRequestDTO {
     private Integer userId;
     private Integer roomId;
-    private LocalDateTime viewedAt;
 }
