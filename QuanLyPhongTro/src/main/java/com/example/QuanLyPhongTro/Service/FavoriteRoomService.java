@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +27,7 @@ public class FavoriteRoomService {
 
     @Transactional
     public FavoriteRoomResponseDTO createFavoriteRoom(CreateFavoriteRoomRequestDTO requestDTO) {
-        FavoriteRoom favoriteRoom = favoriteRoomMapper.toEntity(requestDTO);
-        favoriteRoom.setAddedAt(requestDTO.getAddedAt() != null ? requestDTO.getAddedAt() : LocalDateTime.now());
+        FavoriteRoom favoriteRoom = new FavoriteRoom();
 
         // Gán User
         if (requestDTO.getUserId() != null) {
@@ -44,7 +42,7 @@ public class FavoriteRoomService {
                     .orElseThrow(() -> new RuntimeException("Room not found with id: " + requestDTO.getRoomId()));
             favoriteRoom.setRoom(room);
         }
-
+        favoriteRoom.setAddedAt(LocalDateTime.now());
         favoriteRoom = favoriteRoomRepository.save(favoriteRoom);
         return favoriteRoomMapper.toDto(favoriteRoom);
     }

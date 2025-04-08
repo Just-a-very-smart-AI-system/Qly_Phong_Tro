@@ -14,10 +14,6 @@ public interface FavoriteRoomMapper {
     @Mapping(target = "room", ignore = true)
     FavoriteRoom toEntity(CreateFavoriteRoomRequestDTO dto);
 
-    @Mapping(target = "user", ignore = true)
-    @Mapping(target = "room", ignore = true)
-    FavoriteRoom toEntity(CreateFavoriteRoomRequestDTO dto, @MappingTarget FavoriteRoom favoriteRoom);
-
     @Mapping(source = "user.userId", target = "userId")
     @Mapping(source = "room.roomId", target = "roomId")
     FavoriteRoomResponseDTO toDto(FavoriteRoom favoriteRoom);

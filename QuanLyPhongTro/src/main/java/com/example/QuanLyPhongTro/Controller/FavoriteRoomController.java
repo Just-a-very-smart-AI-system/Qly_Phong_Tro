@@ -13,31 +13,31 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/favorite-rooms")
+    @RequestMapping("/api/favorite-rooms")
 @RequiredArgsConstructor
 public class FavoriteRoomController {
 
     private final FavoriteRoomService favoriteRoomService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<FavoriteRoomResponseDTO> createFavoriteRoom(@Valid @RequestBody CreateFavoriteRoomRequestDTO requestDTO) {
         FavoriteRoomResponseDTO response = favoriteRoomService.createFavoriteRoom(requestDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{favoriteId}")
+    @GetMapping("/getById/{favoriteId}")
     public ResponseEntity<FavoriteRoomResponseDTO> getFavoriteRoomById(@PathVariable Integer favoriteId) {
         FavoriteRoomResponseDTO response = favoriteRoomService.getFavoriteRoomById(favoriteId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<FavoriteRoomResponseDTO>> getAllFavoriteRooms() {
         List<FavoriteRoomResponseDTO> response = favoriteRoomService.getAllFavoriteRooms();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{favoriteId}")
+    @DeleteMapping("/delete/{favoriteId}")
     public ResponseEntity<Void> deleteFavoriteRoom(@PathVariable Integer favoriteId) {
         favoriteRoomService.deleteFavoriteRoom(favoriteId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

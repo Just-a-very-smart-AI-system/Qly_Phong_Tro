@@ -7,5 +7,4 @@ import java.time.LocalDateTime;
 public class CreateFavoriteRoomRequestDTO {
     private Integer userId;
     private Integer roomId;
-    private LocalDateTime addedAt;
 }
