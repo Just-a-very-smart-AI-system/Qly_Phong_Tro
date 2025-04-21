@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-08T14:57:15+0700",
+    date = "2025-04-17T14:00:35+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -23,8 +23,6 @@ public class FavoriteRoomMapperImpl implements FavoriteRoomMapper {
         }
 
         FavoriteRoom favoriteRoom = new FavoriteRoom();
-
-        favoriteRoom.setAddedAt( dto.getAddedAt() );
 
         return favoriteRoom;
     }

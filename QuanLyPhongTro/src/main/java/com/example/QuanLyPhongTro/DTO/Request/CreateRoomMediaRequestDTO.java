@@ -1,16 +1,23 @@
 package com.example.QuanLyPhongTro.DTO.Request;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CreateRoomMediaRequestDTO {
     private Integer roomId;
-    private String mediaType; // Có thể dùng enum hoặc String tùy theo thiết kế
+
     @NotBlank(message = "Media URL is required")
-    @Size(max = 255, message = "Media URL must not exceed 255 characters")
-    private String mediaUrl;
+    private List<MultipartFile> fileUrl;
     private LocalDateTime uploadedAt;
+
 }

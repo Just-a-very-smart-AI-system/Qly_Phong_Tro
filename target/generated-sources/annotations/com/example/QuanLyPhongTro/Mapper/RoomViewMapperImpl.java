@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-08T14:01:58+0700",
+    date = "2025-04-17T14:00:35+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -24,8 +24,6 @@ public class RoomViewMapperImpl implements RoomViewMapper {
 
         RoomView roomView = new RoomView();
 
-        roomView.setViewedAt( dto.getViewedAt() );
-
         return roomView;
     }
 
@@ -34,8 +32,6 @@ public class RoomViewMapperImpl implements RoomViewMapper {
         if ( dto == null ) {
             return roomView;
         }
-
-        roomView.setViewedAt( dto.getViewedAt() );
 
         return roomView;
     }

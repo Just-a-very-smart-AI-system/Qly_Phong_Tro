@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 public class RoomMediaResponseDTO {
     private Integer mediaId;
     private Integer roomId;
-    private String mediaType;
     private String mediaUrl;
     private LocalDateTime uploadedAt;
 }

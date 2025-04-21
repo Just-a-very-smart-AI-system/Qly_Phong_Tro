@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-08T14:01:58+0700",
+    date = "2025-04-17T14:00:35+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -23,10 +23,6 @@ public class RoomMediaMapperImpl implements RoomMediaMapper {
 
         RoomMedia roomMedia = new RoomMedia();
 
-        if ( dto.getMediaType() != null ) {
-            roomMedia.setMediaType( Enum.valueOf( RoomMedia.MediaType.class, dto.getMediaType() ) );
-        }
-        roomMedia.setMediaUrl( dto.getMediaUrl() );
         roomMedia.setUploadedAt( dto.getUploadedAt() );
 
         return roomMedia;
@@ -38,13 +34,6 @@ public class RoomMediaMapperImpl implements RoomMediaMapper {
             return roomMedia;
         }
 
-        if ( dto.getMediaType() != null ) {
-            roomMedia.setMediaType( Enum.valueOf( RoomMedia.MediaType.class, dto.getMediaType() ) );
-        }
-        else {
-            roomMedia.setMediaType( null );
-        }
-        roomMedia.setMediaUrl( dto.getMediaUrl() );
         roomMedia.setUploadedAt( dto.getUploadedAt() );
 
         return roomMedia;
@@ -60,9 +49,6 @@ public class RoomMediaMapperImpl implements RoomMediaMapper {
 
         roomMediaResponseDTO.setRoomId( roomMediaRoomRoomId( roomMedia ) );
         roomMediaResponseDTO.setMediaId( roomMedia.getMediaId() );
-        if ( roomMedia.getMediaType() != null ) {
-            roomMediaResponseDTO.setMediaType( roomMedia.getMediaType().name() );
-        }
         roomMediaResponseDTO.setMediaUrl( roomMedia.getMediaUrl() );
         roomMediaResponseDTO.setUploadedAt( roomMedia.getUploadedAt() );
 

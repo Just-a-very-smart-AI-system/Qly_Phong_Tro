@@ -18,25 +18,25 @@ public class RoomUtilityController {
 
     private final RoomUtilityService roomUtilityService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<RoomUtilityResponseDTO> createRoomUtility(@Valid @RequestBody CreateRoomUtilityRequestDTO requestDTO) {
         RoomUtilityResponseDTO response = roomUtilityService.createRoomUtility(requestDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{utilityId}")
+    @GetMapping("/getById/{utilityId}")
     public ResponseEntity<RoomUtilityResponseDTO> getRoomUtilityById(@PathVariable Integer utilityId) {
         RoomUtilityResponseDTO response = roomUtilityService.getRoomUtilityById(utilityId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<RoomUtilityResponseDTO>> getAllRoomUtilities() {
         List<RoomUtilityResponseDTO> response = roomUtilityService.getAllRoomUtilities();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{utilityId}")
+    @DeleteMapping("/delete/{utilityId}")
     public ResponseEntity<Void> deleteRoomUtility(@PathVariable Integer utilityId) {
         roomUtilityService.deleteRoomUtility(utilityId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

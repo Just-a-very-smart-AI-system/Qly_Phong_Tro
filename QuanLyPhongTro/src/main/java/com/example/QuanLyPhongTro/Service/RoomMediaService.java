@@ -2,6 +2,7 @@ package com.example.QuanLyPhongTro.Service;
 
 import com.example.QuanLyPhongTro.DTO.Request.CreateRoomMediaRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Response.RoomMediaResponseDTO;
+import com.example.QuanLyPhongTro.DTO.Response.UploadResponse;
 import com.example.QuanLyPhongTro.Entity.Room;
 import com.example.QuanLyPhongTro.Entity.RoomMedia;
 import com.example.QuanLyPhongTro.Mapper.RoomMediaMapper;
@@ -9,9 +10,12 @@ import com.example.QuanLyPhongTro.Repository.RoomMediaRepository;
 import com.example.QuanLyPhongTro.Repository.RoomRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,23 +24,60 @@ import java.util.Optional;
 public class RoomMediaService {
 
     private final RoomMediaRepository roomMediaRepository;
+    private final GoogleCloudService googleCloudService;
     private final RoomRepository roomRepository;
     private final RoomMediaMapper roomMediaMapper;
 
     @Transactional
-    public RoomMediaResponseDTO createRoomMedia(CreateRoomMediaRequestDTO requestDTO) {
-        RoomMedia roomMedia = roomMediaMapper.toEntity(requestDTO);
-        roomMedia.setUploadedAt(requestDTO.getUploadedAt() != null ? requestDTO.getUploadedAt() : LocalDateTime.now());
+    public List<RoomMediaResponseDTO> createRoomMedia(CreateRoomMediaRequestDTO requestDTO) {
 
-        // Gán Room
-        if (requestDTO.getRoomId() != null) {
-            Room room = roomRepository.findById(requestDTO.getRoomId())
-                    .orElseThrow(() -> new RuntimeException("Room not found with id: " + requestDTO.getRoomId()));
-            roomMedia.setRoom(room);
+        // Kiểm tra danh sách tệp
+        List<MultipartFile> files = requestDTO.getFileUrl();
+        if (files == null || files.isEmpty()) {
+            throw new IllegalArgumentException("Danh sách tệp không được rỗng");
         }
 
-        roomMedia = roomMediaRepository.save(roomMedia);
-        return roomMediaMapper.toDto(roomMedia);
+        // Gọi GoogleCloudService để tải lên các tệp
+        ResponseEntity<List<UploadResponse>> uploadResponse = googleCloudService.handleFileUpload(files);
+        if (uploadResponse.getStatusCode() != org.springframework.http.HttpStatus.OK || uploadResponse.getBody() == null) {
+            throw new RuntimeException("Lỗi khi tải lên tệp lên GCS");
+        }
+
+        List<RoomMediaResponseDTO> responseDTOs = new ArrayList<>();
+        List<UploadResponse> uploadResults = uploadResponse.getBody();
+
+        // Xử lý từng kết quả tải lên
+        for (UploadResponse uploadResult : uploadResults) {
+            if (!uploadResult.getMessage().startsWith("Upload thành công")) {
+                continue; // Bỏ qua các tệp thất bại
+            }
+
+            // Tạo RoomMedia
+            RoomMedia roomMedia = new RoomMedia();
+            roomMedia.setMediaUrl(uploadResult.getUrl());
+            roomMedia.setUploadedAt(requestDTO.getUploadedAt() != null ? requestDTO.getUploadedAt() : LocalDateTime.now());
+
+            // Gán Room
+            if (requestDTO.getRoomId() != null) {
+                Room room = roomRepository.findById(requestDTO.getRoomId())
+                        .orElseThrow(() -> {
+                            return new RuntimeException("Room not found with id: " + requestDTO.getRoomId());
+                        });
+                roomMedia.setRoom(room);
+            }
+
+            // Lưu RoomMedia
+            roomMedia = roomMediaRepository.save(roomMedia);
+
+            // Chuyển đổi sang DTO
+            responseDTOs.add(roomMediaMapper.toDto(roomMedia));
+        }
+
+        if (responseDTOs.isEmpty()) {
+            throw new RuntimeException("Không có tệp nào được tải lên thành công");
+        }
+
+        return responseDTOs;
     }
 
     public RoomMediaResponseDTO getRoomMediaById(Integer mediaId) {
