@@ -17,5 +17,5 @@ public class RoomResponseDTO {
     private Integer isActive;
     private LocalDateTime updatedAt;
     private Integer addressId;
-//    private RoomUtilityResponseDTO roomUtilityResponseDTO;
+//    private RoomFurnitureResponseDTO roomUtilityResponseDTO;
 }

@@ -40,7 +40,7 @@ public class RoomMediaService {
         // Gọi GoogleCloudService để tải lên các tệp
         ResponseEntity<List<UploadResponse>> uploadResponse = googleCloudService.handleFileUpload(files);
         if (uploadResponse.getStatusCode() != org.springframework.http.HttpStatus.OK || uploadResponse.getBody() == null) {
-            throw new RuntimeException("Lỗi khi tải lên tệp lên GCS");
+            throw new RuntimeException(uploadResponse.getBody().getFirst().getMessage());
         }
 
         List<RoomMediaResponseDTO> responseDTOs = new ArrayList<>();

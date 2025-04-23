@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomUtility {
+public class RoomFurniture {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

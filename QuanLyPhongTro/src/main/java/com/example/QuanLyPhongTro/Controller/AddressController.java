@@ -2,6 +2,7 @@ package com.example.QuanLyPhongTro.Controller;
 
 import com.example.QuanLyPhongTro.DTO.Request.CreateAddressRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Response.AddressResponseDTO;
+import com.example.QuanLyPhongTro.DTO.Response.CoordinatesDTO;
 import com.example.QuanLyPhongTro.Service.AddressService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -72,5 +73,10 @@ public class AddressController {
     public ResponseEntity<Void> deleteAddress(@PathVariable Integer addressId) {
         addressService.deleteAddress(addressId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/getDiractionUrl")
+    public ResponseEntity<String> getDiractionUrl(@RequestBody CoordinatesDTO coordinatesDTO, @RequestParam String travleMode){
+        return ResponseEntity.ok( addressService.getDirectionsUrl(coordinatesDTO, travleMode));
     }
 }

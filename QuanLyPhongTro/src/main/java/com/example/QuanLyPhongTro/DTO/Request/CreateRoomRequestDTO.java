@@ -19,5 +19,9 @@ public class CreateRoomRequestDTO {
     private BigDecimal price;
     private BigDecimal area;
     private Integer maxOccupants;
-    private Integer addressId;
+
+    @NotBlank(message = "Street address is required")
+    @Size(max = 255, message = "Street address must not exceed 255 characters")
+    private String streetAddress;
+    private Integer wardId;
 }

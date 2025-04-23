@@ -24,10 +24,10 @@ public class Address {
     @JoinColumn(name = "ward_id")
     private Ward ward;
 
-    @Column(precision = 10, scale = 8)
+    @Column(precision = 10, scale = 10)
     private BigDecimal latitude;
 
-    @Column(precision = 10, scale = 8)
+    @Column(precision = 10, scale = 10)
     private BigDecimal longitude;
 
     @Column(name = "created_at")

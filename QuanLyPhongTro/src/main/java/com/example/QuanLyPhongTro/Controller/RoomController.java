@@ -101,4 +101,11 @@ public class RoomController {
         List<RoomResponseDTO> rooms = roomService.findByManagerId(id);
         return ResponseEntity.ok(rooms);
     }
+
+    @GetMapping("/getDiractionUrl")
+    public ResponseEntity<String> GetDiractionUrl(@RequestParam Integer roomId){
+        String diractionUrl = roomService.getDiractionUrl(roomId);
+
+        return ResponseEntity.ok(diractionUrl);
+    }
 }

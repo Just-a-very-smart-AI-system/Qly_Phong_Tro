@@ -45,10 +45,13 @@ public class AddressService {
         String fullAddress = String.format("%s, %s",requestDTO.getStreetAddress(), addressResponseDTO.getWardAddress());
 
         CoordinatesDTO coordinatesDTO = locationService.getCoordinatesFromAddress(fullAddress);
-
-        address.setLongitude(coordinatesDTO.getLongitude());
-        address.setLatitude(coordinatesDTO.getLatitude());
-
+        if (coordinatesDTO.getLatitude() != null || coordinatesDTO.getLongitude() != null){
+            address.setLongitude(coordinatesDTO.getLongitude());
+            address.setLatitude(coordinatesDTO.getLatitude());
+        }
+        else {
+            throw new RuntimeException("Không tìm thấy địa chỉ: "+ fullAddress);
+        }
         addressRepository.save(address);
 
         addressResponseDTO = addressMapper.toDto(address);
@@ -166,5 +169,13 @@ public class AddressService {
         return addresses.stream()
                 .map(this::toDtoWithWardAddress)
                 .toList();
+    }
+
+    public String getDirectionsUrl(CoordinatesDTO coordinatesDTO, String travelMode){
+        String longTude = coordinatesDTO.getLongitude().toString(),
+                latTude = coordinatesDTO.getLatitude().toString();
+
+        return String.format("https://www.google.com/maps/dir/?api=1&destination=%s,%s&travelmode=%s",
+                latTude, longTude, travelMode);
     }
 }

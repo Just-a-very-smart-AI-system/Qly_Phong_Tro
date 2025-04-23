@@ -1,8 +1,10 @@
 package com.example.QuanLyPhongTro.Service;
 
+import com.example.QuanLyPhongTro.DTO.Request.CreateAddressRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Request.CreateRoomRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Request.UpdateRoomRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Response.AddressResponseDTO;
+import com.example.QuanLyPhongTro.DTO.Response.CoordinatesDTO;
 import com.example.QuanLyPhongTro.DTO.Response.RoomResponseDTO;
 import com.example.QuanLyPhongTro.Entity.Address;
 import com.example.QuanLyPhongTro.Entity.Manager;
@@ -34,23 +36,25 @@ public class RoomService {
     @Transactional
     public RoomResponseDTO createRoom(CreateRoomRequestDTO requestDTO) {
         Room room = roomMapper.toEntity(requestDTO);
-
+        CreateAddressRequestDTO createAddressRequestDTO = new CreateAddressRequestDTO(requestDTO.getStreetAddress(), requestDTO.getWardId());
         // Gán Address
-        Address address = addressRepository.findById(requestDTO.getAddressId())
-                .orElseThrow(() -> new RuntimeException("Address not found with id: " + requestDTO.getAddressId()));
+        AddressResponseDTO addressResponseDTO = addressService.createAddress(createAddressRequestDTO);
+        Address address = addressRepository.findById(addressResponseDTO.getAddressId())
+                .orElseThrow(() -> new RuntimeException( "Address not found with id: " + addressResponseDTO.getAddressId()));
         room.setAddress(address);
         Manager manager = managerRepository.findById(requestDTO.getManagerId())
-                .orElseThrow(() -> new RuntimeException("Address not found with id: " + requestDTO.getAddressId()));
+                .orElseThrow(() -> new RuntimeException("Address not found with id: " + requestDTO.getManagerId()));
         room.setManager(manager);
+
         room.setIsActive(1);
         room.setCreatedAt(LocalDateTime.now());
         room.setUpdatedAt(LocalDateTime.now());
+
         // Lưu room vào cơ sở dữ liệu
         room = roomRepository.save(room);
 
         // Chuyển đổi thành DTO và gán thông tin địa chỉ
         RoomResponseDTO roomResponseDTO = roomMapper.toDto(room);
-        AddressResponseDTO addressResponseDTO = addressService.getAddressById(room.getAddress().getAddressId());
         roomResponseDTO.setAddressId(addressResponseDTO.getAddressId());
 
         return roomResponseDTO;
@@ -234,5 +238,15 @@ public class RoomService {
                     return roomResponseDTO;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public String getDiractionUrl(Integer roomId){
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("Room not found with id: " + roomId));
+        Address address = room.getAddress();
+        CoordinatesDTO coordinatesDTO = new CoordinatesDTO(address.getLatitude(), address.getLongitude());
+        String dirationUrl = addressService.getDirectionsUrl(coordinatesDTO, "Driving");
+
+        return dirationUrl;
     }
 }
