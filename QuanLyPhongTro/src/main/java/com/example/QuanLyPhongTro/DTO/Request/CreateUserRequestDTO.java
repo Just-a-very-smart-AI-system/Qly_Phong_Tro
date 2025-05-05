@@ -24,5 +24,8 @@ public class CreateUserRequestDTO {
     @Size(max = 15, message = "Phone must not exceed 15 characters")
     private String phone;
 
+    @NotBlank(message = "Role is required")
+    @Size(max = 50, message = "Email must not exceed 50 characters")
+    private String role;
     private Integer addressId;
 }

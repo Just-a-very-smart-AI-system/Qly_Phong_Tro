@@ -9,7 +9,6 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface ManagerMapper {
-
     Manager toEntity(CreateManagerRequestDTO dto);
     ManagerResponseDTO toDto(Manager manager);
 }

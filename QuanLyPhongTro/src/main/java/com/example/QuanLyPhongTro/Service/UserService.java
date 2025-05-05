@@ -1,6 +1,5 @@
 package com.example.QuanLyPhongTro.Service;
 
-
 import com.example.QuanLyPhongTro.DTO.Request.CreateUserRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Request.UpdateUserRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Response.UserResponseDTO;
@@ -8,10 +7,12 @@ import com.example.QuanLyPhongTro.Entity.Address;
 import com.example.QuanLyPhongTro.Entity.User;
 import com.example.QuanLyPhongTro.Mapper.UserMapper;
 import com.example.QuanLyPhongTro.Repository.AddressRepository;
+import com.example.QuanLyPhongTro.Repository.ManagerRepository;
 import com.example.QuanLyPhongTro.Repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.DataException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,19 +24,29 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final ManagerRepository managerRepository;
     private final AddressRepository addressRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder; // Thêm PasswordEncoder
 
     @Transactional
     public UserResponseDTO createUser(CreateUserRequestDTO requestDTO) {
         User user = userMapper.toEntity(requestDTO);
         user.setCreatedAt(LocalDateTime.now());
+        if (managerRepository.existsByUserName(requestDTO.getUserName())) {
+            throw new DataException("Username already exists", null);
+        }
+        if (managerRepository.existsByEmail(requestDTO.getEmail())) {
+            throw new DataException("Email already exists", null);
+        }
         if (userRepository.existsByUserName(requestDTO.getUserName())) {
             throw new DataException("Username already exists", null);
         }
         if (userRepository.existsByEmail(requestDTO.getEmail())) {
             throw new DataException("Email already exists", null);
         }
+        // Mã hóa mật khẩu
+        user.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
         // Gán Address nếu addressId được cung cấp
         if (requestDTO.getAddressId() != null) {
             Address address = addressRepository.findById(requestDTO.getAddressId())
@@ -56,6 +67,10 @@ public class UserService {
         User user = optionalUser.get();
         userMapper.toEntity(requestDTO, user);
 
+        // Mã hóa mật khẩu nếu được cung cấp
+        if (requestDTO.getPassword() != null && !requestDTO.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
+        }
         // Cập nhật Address nếu addressId được cung cấp
         if (requestDTO.getAddressId() != null) {
             Address address = addressRepository.findById(requestDTO.getAddressId())

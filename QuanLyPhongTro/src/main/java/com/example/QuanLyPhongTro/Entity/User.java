@@ -34,4 +34,7 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "address_id")
     private Address address;
+
+    @Column(name = "role", length = 50)
+    private String role;
 }

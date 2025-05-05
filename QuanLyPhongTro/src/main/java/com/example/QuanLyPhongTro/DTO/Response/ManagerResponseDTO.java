@@ -12,5 +12,6 @@ public class ManagerResponseDTO {
     private String address;
     private String cmnd;
     private String extraContact;
+    private String role;
     private LocalDateTime createdAt;
 }

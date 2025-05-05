@@ -19,5 +19,7 @@ public class UpdateUserRequestDTO {
     @Size(max = 15, message = "Phone must not exceed 15 characters")
     private String phone;
 
+    private String role;
+
     private Integer addressId;
 }

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,12 +26,14 @@ public class ManagerController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PutMapping("update/{managerId}")
     public ResponseEntity<ManagerResponseDTO> updateManager(@PathVariable Integer managerId, @Valid @RequestBody CreateManagerRequestDTO requestDTO) {
         ManagerResponseDTO response = managerService.updateManager(managerId, requestDTO);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('MANAGER, ADMIN')")
     @GetMapping("getById/{managerId}")
     public ResponseEntity<ManagerResponseDTO> getManagerById(@PathVariable Integer managerId) {
         ManagerResponseDTO response = managerService.getManagerById(managerId);

@@ -13,9 +13,13 @@ import org.mapstruct.MappingTarget;
 public interface UserMapper {
 
     @Mapping(target = "address", ignore = true)
+    @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     User toEntity(CreateUserRequestDTO dto);
 
     @Mapping(target = "address", ignore = true)
+    @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     User toEntity(UpdateUserRequestDTO dto, @MappingTarget User user);
 
     @Mapping(source = "address.addressId", target = "addressId")

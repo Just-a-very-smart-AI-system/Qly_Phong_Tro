@@ -37,6 +37,9 @@ public class Manager {
     @Column(name = "extra_contact", length = 100)
     private String extraContact;
 
+    @Column(name = "role", length = 50)
+    private String role;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 }

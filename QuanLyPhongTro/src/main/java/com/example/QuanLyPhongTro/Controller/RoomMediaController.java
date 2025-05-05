@@ -4,7 +4,6 @@ package com.example.QuanLyPhongTro.Controller;
 import com.example.QuanLyPhongTro.DTO.Request.CreateRoomMediaRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Response.RoomMediaResponseDTO;
 import com.example.QuanLyPhongTro.Service.RoomMediaService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

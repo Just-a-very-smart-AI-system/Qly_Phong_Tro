@@ -30,6 +30,10 @@ public class CreateManagerRequestDTO {
     @Size(max = 20, message = "CMND must not exceed 20 characters")
     private String cmnd;
 
+    @NotBlank(message = "Role is required")
+    @Size(max = 100, message = "Role must not exceed 50 characters")
+    private String role;
+
     @Size(max = 100, message = "Extra contact must not exceed 100 characters")
     private String extraContact;
 

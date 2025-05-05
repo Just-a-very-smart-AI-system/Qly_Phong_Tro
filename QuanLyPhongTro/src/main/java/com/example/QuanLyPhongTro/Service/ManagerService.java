@@ -5,10 +5,12 @@ import com.example.QuanLyPhongTro.DTO.Response.ManagerResponseDTO;
 import com.example.QuanLyPhongTro.Entity.Manager;
 import com.example.QuanLyPhongTro.Mapper.ManagerMapper;
 import com.example.QuanLyPhongTro.Repository.ManagerRepository;
+import com.example.QuanLyPhongTro.Repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,7 +22,9 @@ import java.util.Optional;
 public class ManagerService {
     @Autowired
     private final ManagerRepository managerRepository;
+    private final UserRepository userRepository;
     private final ManagerMapper managerMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public ManagerResponseDTO createManager(CreateManagerRequestDTO requestDTO) {
@@ -30,8 +34,16 @@ public class ManagerService {
         if (managerRepository.existsByEmail(requestDTO.getEmail())) {
             throw new DataException("Email already exists", null);
         }
+        if (userRepository.existsByUserName(requestDTO.getUserName())) {
+            throw new DataException("Username already exists", null);
+        }
+        if (userRepository.existsByEmail(requestDTO.getEmail())) {
+            throw new DataException("Email already exists", null);
+        }
         Manager manager = managerMapper.toEntity(requestDTO);
+        manager.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
         manager.setCreatedAt(requestDTO.getCreatedAt() != null ? requestDTO.getCreatedAt() : LocalDateTime.now());
+
         manager = managerRepository.save(manager);
         return managerMapper.toDto(manager);
     }
@@ -44,6 +56,8 @@ public class ManagerService {
         }
         Manager manager = optionalManager.get();
         managerMapper.toEntity(requestDTO);
+        manager.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
+
         manager = managerRepository.save(manager);
         return managerMapper.toDto(manager);
     }
