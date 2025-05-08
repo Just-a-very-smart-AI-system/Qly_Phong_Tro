@@ -1,5 +1,6 @@
 package com.example.QuanLyPhongTro.Controller;
 
+import com.example.QuanLyPhongTro.Configuration.StoreApi;
 import com.example.QuanLyPhongTro.DTO.Request.CreateUserRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Request.UpdateUserRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Response.UserResponseDTO;
@@ -25,6 +26,7 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_USER"})
     @PutMapping("/update/{userId}")
     public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Integer userId, @Valid @RequestBody UpdateUserRequestDTO requestDTO) {
         UserResponseDTO response = userService.updateUser(userId, requestDTO);
@@ -32,17 +34,20 @@ public class UserController {
     }
 
     @GetMapping("/getById/{userId}")
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Integer userId) {
         UserResponseDTO response = userService.getUserById(userId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @StoreApi(roles = {"ROLE_ADMIN"})
     @GetMapping("/getAll")
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         List<UserResponseDTO> response = userService.getAllUsers();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @StoreApi(roles = {"ROLE_ADMIN"})
     @DeleteMapping("delete/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
         userService.deleteUser(userId);

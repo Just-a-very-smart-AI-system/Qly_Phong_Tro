@@ -1,6 +1,7 @@
 package com.example.QuanLyPhongTro.Controller;
 
 
+import com.example.QuanLyPhongTro.Configuration.StoreApi;
 import com.example.QuanLyPhongTro.DTO.Request.CreateRoomMediaRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Response.RoomMediaResponseDTO;
 import com.example.QuanLyPhongTro.Service.RoomMediaService;
@@ -21,7 +22,8 @@ public class RoomMediaController {
     private final RoomMediaService roomMediaService;
 
     @PostMapping("/create")
-    public ResponseEntity<List<RoomMediaResponseDTO>> createRoomMedia(@RequestParam("files")List <MultipartFile> files, @RequestParam Integer roomId) {
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
+    public ResponseEntity<List<RoomMediaResponseDTO>> createRoomMedia(@RequestParam("files") List<MultipartFile> files, @RequestParam("roomId") Integer roomId) {
         CreateRoomMediaRequestDTO requestDTO = new CreateRoomMediaRequestDTO(roomId, files, LocalDateTime.now());
 
         List<RoomMediaResponseDTO> response = roomMediaService.createRoomMedia(requestDTO);
@@ -29,18 +31,21 @@ public class RoomMediaController {
     }
 
     @GetMapping("/getById/{mediaId}")
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<RoomMediaResponseDTO> getRoomMediaById(@PathVariable Integer mediaId) {
         RoomMediaResponseDTO response = roomMediaService.getRoomMediaById(mediaId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/getAll")
+    @StoreApi(roles = {"ROLE_ADMIN"})
     public ResponseEntity<List<RoomMediaResponseDTO>> getAllRoomMedia() {
         List<RoomMediaResponseDTO> response = roomMediaService.getAllRoomMedia();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{mediaId}")
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<Void> deleteRoomMedia(@PathVariable Integer mediaId) {
         roomMediaService.deleteRoomMedia(mediaId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

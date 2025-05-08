@@ -1,5 +1,6 @@
 package com.example.QuanLyPhongTro.Controller;
 
+import com.example.QuanLyPhongTro.Configuration.StoreApi;
 import com.example.QuanLyPhongTro.DTO.Request.CreateRoomViewRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Response.RoomViewResponseDTO;
 import com.example.QuanLyPhongTro.Service.RoomViewService;
@@ -19,23 +20,27 @@ public class RoomViewController {
     private final RoomViewService roomViewService;
 
     @PostMapping("/create")
+    @StoreApi(roles = {"ROLE_ADMIN"})
     public ResponseEntity<RoomViewResponseDTO> createRoomView(@Valid @RequestBody CreateRoomViewRequestDTO requestDTO) {
         RoomViewResponseDTO response = roomViewService.createRoomView(requestDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @StoreApi(roles = {"ROLE_ADMIN"})
     @GetMapping("/getById/{viewId}")
     public ResponseEntity<RoomViewResponseDTO> getRoomViewById(@PathVariable Integer viewId) {
         RoomViewResponseDTO response = roomViewService.getRoomViewById(viewId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @StoreApi(roles = {"ROLE_ADMIN"})
     @GetMapping("/getAll")
     public ResponseEntity<List<RoomViewResponseDTO>> getAllRoomViews() {
         List<RoomViewResponseDTO> response = roomViewService.getAllRoomViews();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @StoreApi(roles = {"ROLE_ADMIN"})
     @DeleteMapping("/delete/{viewId}")
     public ResponseEntity<Void> deleteRoomView(@PathVariable Integer viewId) {
         roomViewService.deleteRoomView(viewId);

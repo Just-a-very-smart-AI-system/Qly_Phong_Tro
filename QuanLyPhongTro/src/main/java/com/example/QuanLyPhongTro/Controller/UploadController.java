@@ -1,5 +1,6 @@
 package com.example.QuanLyPhongTro.Controller;
 
+import com.example.QuanLyPhongTro.Configuration.StoreApi;
 import com.example.QuanLyPhongTro.DTO.Response.UploadResponse;
 import com.example.QuanLyPhongTro.Service.GoogleCloudService;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class UploadController {
         this.googleCloudService = googleCloudService;
     }
 
+    @StoreApi(roles = {"ROLE_ADMIN"})
     @PostMapping("/upload")
     public ResponseEntity<List<UploadResponse>> uploadFile(@RequestParam("files") List<MultipartFile> files) {
         return googleCloudService.handleFileUpload(files);

@@ -1,5 +1,6 @@
 package com.example.QuanLyPhongTro.Controller;
 
+import com.example.QuanLyPhongTro.Configuration.StoreApi;
 import com.example.QuanLyPhongTro.DTO.Request.CreateRoomFurnitureRequestDTO;
 import com.example.QuanLyPhongTro.DTO.Response.RoomFurnitureResponseDTO;
 import com.example.QuanLyPhongTro.Service.RoomFurnitureService;
@@ -19,24 +20,28 @@ public class RoomFurnitureController {
     private final RoomFurnitureService roomFurnitureService;
 
     @PostMapping("/create")
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<RoomFurnitureResponseDTO> createRoomUtility(@Valid @RequestBody CreateRoomFurnitureRequestDTO requestDTO) {
         RoomFurnitureResponseDTO response = roomFurnitureService.createRoomFurniture(requestDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/getByRoomId/{roomId}")
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<RoomFurnitureResponseDTO> getRoomUtilityById(@PathVariable Integer roomId) {
         RoomFurnitureResponseDTO response = roomFurnitureService.getRoomFurnitureByRoomId(roomId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/getAll")
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<List<RoomFurnitureResponseDTO>> getAllRoomUtilities() {
         List<RoomFurnitureResponseDTO> response = roomFurnitureService.getAllRoomFurniture();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{utilityId}")
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<Void> deleteRoomUtility(@PathVariable Integer utilityId) {
         roomFurnitureService.deleteRoomFurniture(utilityId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
