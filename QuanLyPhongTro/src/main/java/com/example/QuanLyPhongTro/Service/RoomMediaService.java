@@ -90,7 +90,11 @@ public class RoomMediaService {
                 .map(roomMediaMapper::toDto)
                 .toList();
     }
-
+    public List<RoomMediaResponseDTO> getAllRoomByRoomId(Long roomId) {
+        return roomMediaRepository.findAllByRoomRoomId(roomId).stream()
+                .map(roomMediaMapper::toDto)
+                .toList();
+    }
     @Transactional
     public void deleteRoomMedia(Integer mediaId) {
         if (!roomMediaRepository.existsById(mediaId)) {

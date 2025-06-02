@@ -43,7 +43,12 @@ public class RoomMediaController {
         List<RoomMediaResponseDTO> response = roomMediaService.getAllRoomMedia();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
+    @GetMapping("/getByRoomId/{roomId}")
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
+    public ResponseEntity<List<RoomMediaResponseDTO>> getByRoomId(@PathVariable Long roomId) {
+        List<RoomMediaResponseDTO> response = roomMediaService.getAllRoomByRoomId(roomId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @DeleteMapping("/delete/{mediaId}")
     @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<Void> deleteRoomMedia(@PathVariable Integer mediaId) {
