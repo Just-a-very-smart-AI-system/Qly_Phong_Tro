@@ -31,7 +31,7 @@ public class RoomMediaController {
     }
 
     @GetMapping("/getById/{mediaId}")
-    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
+    @StoreApi(roles = {"ROLE_ADMIN"})
     public ResponseEntity<RoomMediaResponseDTO> getRoomMediaById(@PathVariable Integer mediaId) {
         RoomMediaResponseDTO response = roomMediaService.getRoomMediaById(mediaId);
         return new ResponseEntity<>(response, HttpStatus.OK);

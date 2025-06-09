@@ -40,7 +40,7 @@ public class DistrictController {
         List<DistrictResponseDTO> response = districtService.getAllDistricts();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    @StoreApi(roles = {"ROLE_ADMIN"})
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
     @GetMapping("/getByProvince/{id}")
     public ResponseEntity<List<DistrictResponseDTO>> getByProvince(@PathVariable Integer id) {
         List<DistrictResponseDTO> response = districtService.getAllByProvince(id);

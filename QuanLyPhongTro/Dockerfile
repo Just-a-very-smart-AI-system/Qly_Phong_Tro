@@ -14,3 +14,7 @@ WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+
+#docker build -t quanlyphongtro:latest .
+#docker tag quanlyphongtro:latest hoangtdv/quanlyphongtro:1.0.3
+#docker push hoangtdv/quanlyphongtro:1.0.3

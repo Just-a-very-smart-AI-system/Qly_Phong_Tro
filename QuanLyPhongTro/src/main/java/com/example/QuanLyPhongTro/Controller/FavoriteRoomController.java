@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-    @RequestMapping("/api/favorite-rooms")
+@RequestMapping("/api/favorite-rooms")
 @RequiredArgsConstructor
 public class FavoriteRoomController {
 
     private final FavoriteRoomService favoriteRoomService;
 
-    @StoreApi(roles = {"ROLE_ADMIN"})
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
     @PostMapping("/create")
     public ResponseEntity<FavoriteRoomResponseDTO> createFavoriteRoom(@Valid @RequestBody CreateFavoriteRoomRequestDTO requestDTO) {
         FavoriteRoomResponseDTO response = favoriteRoomService.createFavoriteRoom(requestDTO);

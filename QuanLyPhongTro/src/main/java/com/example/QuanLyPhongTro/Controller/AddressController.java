@@ -21,13 +21,13 @@ public class AddressController {
     private final AddressService addressService;
 
     @PostMapping("/create")
-    @StoreApi(roles = {"ROLE_ADMIN"})
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<AddressResponseDTO> createAddress(@Valid @RequestBody CreateAddressRequestDTO requestDTO) {
         AddressResponseDTO response = addressService.createAddress(requestDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @StoreApi(roles = {"ROLE_ADMIN"})
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
     @PutMapping("/update/{addressId}")
     public ResponseEntity<AddressResponseDTO> updateAddress(@PathVariable Integer addressId, @Valid @RequestBody CreateAddressRequestDTO requestDTO) {
         AddressResponseDTO response = addressService.updateAddress(addressId, requestDTO);

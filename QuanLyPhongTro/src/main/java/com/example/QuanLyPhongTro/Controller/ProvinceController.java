@@ -33,7 +33,7 @@ public class ProvinceController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @StoreApi(roles = {"ROLE_ADMIN"})
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
     @GetMapping("/getAll")
     public ResponseEntity<List<ProvinceResponseDTO>> getAllProvinces() {
         List<ProvinceResponseDTO> response = provinceService.getAllProvinces();

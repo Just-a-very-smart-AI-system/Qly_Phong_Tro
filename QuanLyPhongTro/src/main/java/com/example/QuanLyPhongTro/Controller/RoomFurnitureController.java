@@ -20,21 +20,21 @@ public class RoomFurnitureController {
     private final RoomFurnitureService roomFurnitureService;
 
     @PostMapping("/create")
-    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
     public ResponseEntity<RoomFurnitureResponseDTO> createRoomUtility(@Valid @RequestBody CreateRoomFurnitureRequestDTO requestDTO) {
         RoomFurnitureResponseDTO response = roomFurnitureService.createRoomFurniture(requestDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/getByRoomId/{roomId}")
-    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
     public ResponseEntity<RoomFurnitureResponseDTO> getRoomUtilityById(@PathVariable Integer roomId) {
         RoomFurnitureResponseDTO response = roomFurnitureService.getRoomFurnitureByRoomId(roomId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/getAll")
-    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
+    @StoreApi(roles = {"ROLE_ADMIN"})
     public ResponseEntity<List<RoomFurnitureResponseDTO>> getAllRoomUtilities() {
         List<RoomFurnitureResponseDTO> response = roomFurnitureService.getAllRoomFurniture();
         return new ResponseEntity<>(response, HttpStatus.OK);
