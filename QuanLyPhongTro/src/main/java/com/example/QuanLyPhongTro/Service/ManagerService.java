@@ -73,7 +73,10 @@ public class ManagerService {
                 .map(managerMapper::toDto)
                 .toList();
     }
-
+    public Manager findByUserName(String name){
+        return managerRepository.findByUserName(name)
+                .orElseThrow(() -> new RuntimeException("UserName not found"));
+    }
     @Transactional
     public void deleteManager(Integer managerId) {
         if (!managerRepository.existsById(managerId)) {

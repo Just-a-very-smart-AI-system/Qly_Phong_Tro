@@ -93,7 +93,10 @@ public class UserService {
                 .map(userMapper::toDto)
                 .toList();
     }
-
+    public User findByUserName(String name){
+        return userRepository.findByUserName(name)
+                .orElseThrow(() -> new RuntimeException("UserName not found"));
+    }
     @Transactional
     public void deleteUser(Integer userId) {
         if (!userRepository.existsById(userId)) {

@@ -1,8 +1,15 @@
 package com.example.QuanLyPhongTro.Configuration;
 
+import com.example.QuanLyPhongTro.Entity.Manager;
+import com.example.QuanLyPhongTro.Entity.User;
+import com.example.QuanLyPhongTro.Repository.ManagerRepository;
+import com.example.QuanLyPhongTro.Repository.UserRepository;
+import com.example.QuanLyPhongTro.Service.ManagerService;
+import com.example.QuanLyPhongTro.Service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
@@ -12,12 +19,28 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
+    @Autowired
+    private UserRepository userService;
+    @Autowired
+    private ManagerRepository managerService;
     private final String secret = "EVana8qKD1pjK6Bba2ti4dSe1oIeSUPl";
     private final long expiration = 24 * 60 * 60 * 1000; // 1 ngày (ms)
 
     // Tạo JWT với username và roles
     public String generateToken(String username, Collection<? extends GrantedAuthority> authorities) {
-        Claims claims = Jwts.claims().setSubject(username);
+        User user = userService.findByUserName(username).orElse(null);
+        Manager manager = managerService.findByUserName(username).orElse(null);
+        Integer id;
+        if(user != null){
+            id = user.getUserId();
+        }
+        else{
+            id = manager.getManagerId();
+        }
+        Claims claims = Jwts.claims()
+                .setSubject(username)
+                        .setId(id.toString());
+
         claims.put("roles", authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
