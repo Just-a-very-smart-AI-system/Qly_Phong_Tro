@@ -21,7 +21,7 @@ public class RoomFurnitureController {
 
     @PostMapping("/create")
     @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
-    public ResponseEntity<RoomFurnitureResponseDTO> createRoomUtility(@Valid @RequestBody CreateRoomFurnitureRequestDTO requestDTO) {
+    public ResponseEntity<RoomFurnitureResponseDTO> createRoomUtility(@RequestBody CreateRoomFurnitureRequestDTO requestDTO) {
         RoomFurnitureResponseDTO response = roomFurnitureService.createRoomFurniture(requestDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

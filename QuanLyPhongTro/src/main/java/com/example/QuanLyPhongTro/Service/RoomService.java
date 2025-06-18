@@ -15,6 +15,10 @@ import com.example.QuanLyPhongTro.Repository.ManagerRepository;
 import com.example.QuanLyPhongTro.Repository.RoomRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -248,5 +252,32 @@ public class RoomService {
         String dirationUrl = addressService.getDirectionsUrl(coordinatesDTO, "Driving");
 
         return dirationUrl;
+    }
+
+    public Page<RoomResponseDTO> searchRooms(Integer provinceId, Integer districtId, Integer wardId,
+                                             BigDecimal minPrice, BigDecimal maxPrice, int page) {
+        // Kiểm tra minPrice <= maxPrice
+        if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
+            throw new IllegalArgumentException("minPrice must be less than or equal to maxPrice");
+        }
+
+        // Tạo Pageable với page (bắt đầu từ 0) và kích thước trang là 10
+        Pageable pageable = PageRequest.of(page - 1, 8);
+
+        // Gọi repository để lấy kết quả phân trang
+        Page<Room> roomPage = roomRepository.searchRooms(provinceId, districtId, wardId, minPrice, maxPrice, pageable);
+
+        // Ánh xạ Page<Room> sang List<RoomResponseDTO>
+        List<RoomResponseDTO> roomResponseDTOs = roomPage.getContent().stream()
+                .map(room -> {
+                    RoomResponseDTO roomResponseDTO = roomMapper.toDto(room);
+                    AddressResponseDTO addressResponseDTO = addressService.getAddressById(room.getAddress().getAddressId());
+                    roomResponseDTO.setAddressId(addressResponseDTO.getAddressId());
+                    return roomResponseDTO;
+                })
+                .collect(Collectors.toList());
+
+        // Tạo PageImpl để trả về kết quả phân trang
+        return new PageImpl<>(roomResponseDTOs, pageable, roomPage.getTotalElements());
     }
 }

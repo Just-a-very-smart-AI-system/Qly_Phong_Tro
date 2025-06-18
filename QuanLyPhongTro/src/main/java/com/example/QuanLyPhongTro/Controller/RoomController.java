@@ -10,6 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -123,5 +127,18 @@ public class RoomController {
         String diractionUrl = roomService.getDiractionUrl(roomId);
 
         return ResponseEntity.ok(diractionUrl);
+    }
+    @GetMapping("/search")
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
+    public ResponseEntity<Page<RoomResponseDTO>> searchRooms(
+            @RequestParam(value = "provinceId", required = false) Integer provinceId,
+            @RequestParam(value = "districtId", required = false) Integer districtId,
+            @RequestParam(value = "wardId", required = false) Integer wardId,
+            @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
+            @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
+            @RequestParam(value = "page", defaultValue = "1") int page
+    ) {
+        Page<RoomResponseDTO> rooms = roomService.searchRooms(provinceId, districtId, wardId, minPrice, maxPrice, page);
+        return ResponseEntity.ok(rooms);
     }
 }

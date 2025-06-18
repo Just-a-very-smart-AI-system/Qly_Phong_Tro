@@ -27,29 +27,33 @@ public class RoomFurnitureService {
 
     @Transactional
     public RoomFurnitureResponseDTO createRoomFurniture(CreateRoomFurnitureRequestDTO requestDTO) {
-        validateRequest(requestDTO);
-
         logger.info("Creating new room furniture for room ID: {}", requestDTO.getRoomId());
 
-        RoomFurniture roomFurniture = roomFurnitureMapper.toEntity(requestDTO);
-
-        // Assign Room
         Room room = roomRepository.findById(requestDTO.getRoomId())
                 .orElseThrow(() -> new IllegalArgumentException("Room not found with ID: " + requestDTO.getRoomId()));
-        roomFurniture.setRoom(room);
 
-        roomFurnitureRepository.save(roomFurniture);
-        logger.info("Successfully created room furniture for room ID: {}", room.getRoomId());
+        // Create a RoomFurniture entity for each furniture name
+        List<RoomFurniture> furnitureList = requestDTO.getFurnitureName().stream()
+                .map(name -> {
+                    RoomFurniture furniture = new RoomFurniture();
+                    furniture.setUtilityName(name);
+                    furniture.setRoom(room);
+                    return furniture;
+                })
+                .collect(Collectors.toList());
 
-        // Return DTO with all utilities for the room
+        roomFurnitureRepository.saveAll(furnitureList);
+        logger.info("Successfully created {} furniture items for room ID: {}", furnitureList.size(), room.getRoomId());
+
+        // Return DTO with all furniture for the room
         return getRoomFurnitureByRoomId(room.getRoomId());
     }
 
-    public RoomFurnitureResponseDTO getRoomFurnitureById(Integer utilityId) {
-        logger.info("Fetching room furniture with ID: {}", utilityId);
+    public RoomFurnitureResponseDTO getRoomFurnitureById(Integer furnitureId) {
+        logger.info("Fetching room furniture with ID: {}", furnitureId);
 
-        RoomFurniture furniture = roomFurnitureRepository.findById(utilityId)
-                .orElseThrow(() -> new IllegalArgumentException("Room furniture not found with ID: " + utilityId));
+        RoomFurniture furniture = roomFurnitureRepository.findById(furnitureId)
+                .orElseThrow(() -> new IllegalArgumentException("Room furniture not found with ID: " + furnitureId));
 
         return getRoomFurnitureByRoomId(furniture.getRoom().getRoomId());
     }
@@ -60,21 +64,24 @@ public class RoomFurnitureService {
         // Group RoomFurniture by roomId and map to DTOs
         return roomRepository.findAll().stream()
                 .map(room -> getRoomFurnitureByRoomId(room.getRoomId()))
-                .filter(dto -> !dto.getUtility().isEmpty()) // Exclude rooms with no utilities
+                .filter(dto -> !dto.getUtility().isEmpty()) // Exclude rooms with no furniture
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public RoomFurnitureResponseDTO updateRoomFurniture(Integer utilityId, CreateRoomFurnitureRequestDTO requestDTO) {
+    public RoomFurnitureResponseDTO updateRoomFurniture(Integer furnitureId, CreateRoomFurnitureRequestDTO requestDTO) {
         validateRequest(requestDTO);
 
-        logger.info("Updating room furniture with ID: {}", utilityId);
+        logger.info("Updating room furniture with ID: {}", furnitureId);
 
-        RoomFurniture existingFurniture = roomFurnitureRepository.findById(utilityId)
-                .orElseThrow(() -> new IllegalArgumentException("Room furniture not found with ID: " + utilityId));
+        RoomFurniture existingFurniture = roomFurnitureRepository.findById(furnitureId)
+                .orElseThrow(() -> new IllegalArgumentException("Room furniture not found with ID: " + furnitureId));
 
-        // Update fields
-        roomFurnitureMapper.toEntity(requestDTO, existingFurniture);
+        // Since requestDTO contains a list, we'll update the single furniture item with the first name
+        // This assumes the update is for a single furniture item
+        if (!requestDTO.getFurnitureName().isEmpty()) {
+            existingFurniture.setUtilityName(requestDTO.getFurnitureName().get(0));
+        }
 
         // Update Room if roomId changed
         if (!existingFurniture.getRoom().getRoomId().equals(requestDTO.getRoomId())) {
@@ -84,21 +91,21 @@ public class RoomFurnitureService {
         }
 
         roomFurnitureRepository.save(existingFurniture);
-        logger.info("Successfully updated room furniture with ID: {}", utilityId);
+        logger.info("Successfully updated room furniture with ID: {}", furnitureId);
 
         return getRoomFurnitureByRoomId(existingFurniture.getRoom().getRoomId());
     }
 
     @Transactional
-    public RoomFurnitureResponseDTO deleteRoomFurniture(Integer utilityId) {
-        logger.info("Deleting room furniture with ID: {}", utilityId);
+    public RoomFurnitureResponseDTO deleteRoomFurniture(Integer furnitureId) {
+        logger.info("Deleting room furniture with ID: {}", furnitureId);
 
-        RoomFurniture furniture = roomFurnitureRepository.findById(utilityId)
-                .orElseThrow(() -> new IllegalArgumentException("Room furniture not found with ID: " + utilityId));
+        RoomFurniture furniture = roomFurnitureRepository.findById(furnitureId)
+                .orElseThrow(() -> new IllegalArgumentException("Room furniture not found with ID: " + furnitureId));
 
         Integer roomId = furniture.getRoom().getRoomId();
-        roomFurnitureRepository.deleteById(utilityId);
-        logger.info("Successfully deleted room furniture with ID: {}", utilityId);
+        roomFurnitureRepository.deleteById(furnitureId);
+        logger.info("Successfully deleted room furniture with ID: {}", furnitureId);
 
         return getRoomFurnitureByRoomId(roomId);
     }
@@ -115,8 +122,13 @@ public class RoomFurnitureService {
         if (requestDTO.getRoomId() == null) {
             throw new IllegalArgumentException("Room ID cannot be null");
         }
-        if (requestDTO.getUtilityName() == null || requestDTO.getUtilityName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Utility name cannot be null or empty");
+        if (requestDTO.getFurnitureName() == null || requestDTO.getFurnitureName().isEmpty()) {
+            throw new IllegalArgumentException("Furniture name list cannot be null or empty");
+        }
+        for (String name : requestDTO.getFurnitureName()) {
+            if (name == null || name.trim().isEmpty()) {
+                throw new IllegalArgumentException("Furniture name cannot be null or empty");
+            }
         }
     }
 }
