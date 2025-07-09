@@ -27,7 +27,7 @@ public class WardController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @StoreApi(roles = {"ROLE_ADMIN"})
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
     @GetMapping("/getById/{wardId}")
     public ResponseEntity<WardResponseDTO> getWardById(@PathVariable Integer wardId) {
         WardResponseDTO response = wardService.getWardById(wardId);
@@ -40,7 +40,7 @@ public class WardController {
         List<WardResponseDTO> response = wardService.getAllWards();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    @StoreApi(roles = {"ROLE_ADMIN"})
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
     @GetMapping("/getByDistrict/{districtId}")
     public ResponseEntity<List<WardResponseDTO>> getByDistrict(@PathVariable Integer districtId) {
         List<WardResponseDTO> response = wardService.getByDistrict(districtId);

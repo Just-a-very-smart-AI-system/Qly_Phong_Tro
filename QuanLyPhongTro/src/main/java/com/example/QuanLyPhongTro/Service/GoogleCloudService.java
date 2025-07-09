@@ -68,7 +68,7 @@ public class GoogleCloudService {
                 // Tải lên GCS
                 storage.createFrom(blobInfo, file.getInputStream());
                 // Tạo URL
-                String fileUrl = String.format("https://storage.cloud.google.com/%s/%s?authuser=0", BUCKET_NAME, uniqueFileName);
+                String fileUrl = String.format("https://storage.googleapis.com/%s/%s", BUCKET_NAME, uniqueFileName);
                 // Thêm vào danh sách phản hồi
                 responses.add(new UploadResponse(fileUrl, "Upload thành công"));
             }

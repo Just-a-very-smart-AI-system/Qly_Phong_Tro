@@ -34,8 +34,5 @@ public class AuthController {
 
         return ResponseEntity.ok(new JwtResponse(jwt));
     }
-//    @GetMapping("/login/info")
-//    public String loginInfo(){
-//
-//    }
+
 }

@@ -255,17 +255,20 @@ public class RoomService {
     }
 
     public Page<RoomResponseDTO> searchRooms(Integer provinceId, Integer districtId, Integer wardId,
-                                             BigDecimal minPrice, BigDecimal maxPrice, int page) {
+                                             BigDecimal minPrice, BigDecimal maxPrice,
+                                             BigDecimal minArea, BigDecimal maxArea, int page) {
         // Kiểm tra minPrice <= maxPrice
         if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
             throw new IllegalArgumentException("minPrice must be less than or equal to maxPrice");
         }
-
-        // Tạo Pageable với page (bắt đầu từ 0) và kích thước trang là 10
+        if (minArea != null && maxArea != null && minArea.compareTo(maxArea) > 0) {
+            throw new IllegalArgumentException("minArea must be less than or equal to maxArea");
+        }
+        // Tạo Pageable với page (bắt đầu từ 0) và kích thước trang là 8
         Pageable pageable = PageRequest.of(page - 1, 8);
 
         // Gọi repository để lấy kết quả phân trang
-        Page<Room> roomPage = roomRepository.searchRooms(provinceId, districtId, wardId, minPrice, maxPrice, pageable);
+        Page<Room> roomPage = roomRepository.searchRooms(provinceId, districtId, wardId, minPrice, maxPrice, maxArea, minArea, pageable);
 
         // Ánh xạ Page<Room> sang List<RoomResponseDTO>
         List<RoomResponseDTO> roomResponseDTOs = roomPage.getContent().stream()

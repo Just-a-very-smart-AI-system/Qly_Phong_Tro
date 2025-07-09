@@ -44,7 +44,7 @@ public class RoomMediaController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/getByRoomId/{roomId}")
-    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
     public ResponseEntity<List<RoomMediaResponseDTO>> getByRoomId(@PathVariable Long roomId) {
         List<RoomMediaResponseDTO> response = roomMediaService.getAllRoomByRoomId(roomId);
         return new ResponseEntity<>(response, HttpStatus.OK);

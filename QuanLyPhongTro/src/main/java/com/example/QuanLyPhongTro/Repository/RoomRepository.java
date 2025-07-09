@@ -46,13 +46,18 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
             "AND (:districtId IS NULL OR d.districtId = :districtId) " +
             "AND (:wardId IS NULL OR w.wardId = :wardId) " +
             "AND (:minPrice IS NULL OR r.price >= :minPrice) " +
-            "AND (:maxPrice IS NULL OR r.price <= :maxPrice)")
+            "AND (:maxPrice IS NULL OR r.price <= :maxPrice)" +
+            "AND (:maxArea IS NUll OR r.area <= :maxArea)" +
+            "AND (:minArea IS NUll OR r.area >= :minArea)"
+    )
     Page<Room> searchRooms(
             @Param("provinceId") Integer provinceId,
             @Param("districtId") Integer districtId,
             @Param("wardId") Integer wardId,
             @Param("minPrice") BigDecimal minPrice,
             @Param("maxPrice") BigDecimal maxPrice,
+            @Param("maxArea") BigDecimal maxArea,
+            @Param("minArea") BigDecimal minArea,
             Pageable pageable
     );
 }

@@ -7,13 +7,10 @@ import com.example.QuanLyPhongTro.DTO.Response.RoomResponseDTO;
 import com.example.QuanLyPhongTro.Service.RoomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -122,23 +119,25 @@ public class RoomController {
     }
 
     @GetMapping("/getDiractionUrl")
-    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
     public ResponseEntity<String> GetDiractionUrl(@RequestParam Integer roomId){
         String diractionUrl = roomService.getDiractionUrl(roomId);
 
         return ResponseEntity.ok(diractionUrl);
     }
     @GetMapping("/search")
-    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER"})
+    @StoreApi(roles = {"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
     public ResponseEntity<Page<RoomResponseDTO>> searchRooms(
             @RequestParam(value = "provinceId", required = false) Integer provinceId,
             @RequestParam(value = "districtId", required = false) Integer districtId,
             @RequestParam(value = "wardId", required = false) Integer wardId,
             @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
             @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
+            @RequestParam(value = "minArea", required = false) BigDecimal minArea,
+            @RequestParam(value = "maxArea", required = false) BigDecimal maxArea,
             @RequestParam(value = "page", defaultValue = "1") int page
     ) {
-        Page<RoomResponseDTO> rooms = roomService.searchRooms(provinceId, districtId, wardId, minPrice, maxPrice, page);
+        Page<RoomResponseDTO> rooms = roomService.searchRooms(provinceId, districtId, wardId, minPrice, maxPrice, minArea, maxArea, page);
         return ResponseEntity.ok(rooms);
     }
 }
